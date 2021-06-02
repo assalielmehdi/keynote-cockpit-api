@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/presentations")
 public class PresentationController {
 
   private final PresentationService presentationService;
 
-  @PostMapping("/presentations")
+  @PostMapping
   public PresentationDto create(@RequestBody PresentationDto presentationDto) {
     return presentationService.create(presentationDto);
   }

@@ -4,6 +4,7 @@ import io.assalielmehdi.keynote.dto.PresentationDto;
 import io.assalielmehdi.keynote.helpers.PresentationHelper;
 import io.assalielmehdi.keynote.mappers.PresentationMapper;
 import io.assalielmehdi.keynote.repositories.PresentationRepository;
+import io.assalielmehdi.keynote.security.AuthenticationService;
 import io.assalielmehdi.keynote.validators.PresentationValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ public class PresentationServiceImpl implements PresentationService {
 
   private final TokenService tokenService;
 
+  private final AuthenticationService authenticationService;
+
   @Override
   public PresentationDto create(PresentationDto presentationDto) {
     presentationHelper.normalizeRequest(presentationDto);
@@ -30,7 +33,10 @@ public class PresentationServiceImpl implements PresentationService {
     final var token = tokenService.generate();
     presentationDto.setToken(token);
 
-    final var presentation = presentationMapper.fromDto(presentationDto);
+    final var principalEmail = authenticationService.getPrincipalEmail();
+
+    final var presentation = presentationMapper.fromDto(presentationDto, principalEmail);
+
     presentationRepository.save(presentation);
 
     return presentationDto;

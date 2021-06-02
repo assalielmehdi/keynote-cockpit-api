@@ -27,7 +27,7 @@ class PresentationMapperImplTest {
       // Then
       ServerErrorException.class,
       // When
-      () -> presentationMapper.fromDto(null)
+      () -> presentationMapper.fromDto(null, null)
     );
   }
 
@@ -38,6 +38,7 @@ class PresentationMapperImplTest {
     final var beginsAt = LocalDateTime.now();
     final var duration = 60;
     final var token = "token";
+    final var owner = "owner-email";
     final var dto = PresentationDto.builder()
       .title(title)
       .beginsAt(beginsAt)
@@ -46,15 +47,15 @@ class PresentationMapperImplTest {
       .build();
 
     // When
-    var model = presentationMapper.fromDto(dto);
+    var model = presentationMapper.fromDto(dto, owner);
 
     // Then
     assertThat(model.getId()).isNull();
-    assertThat(model.getOwner()).isNull();
     assertThat(model.getTitle()).isEqualTo(title);
     assertThat(model.getBeginsAt()).isEqualTo(beginsAt);
     assertThat(model.getDuration()).isEqualTo(duration);
     assertThat(model.getToken()).isEqualTo(token);
+    assertThat(model.getOwner()).isEqualTo(owner);
   }
 
   @Test

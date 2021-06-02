@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class PresentationMapperImpl implements PresentationMapper {
 
   @Override
-  public Presentation fromDto(PresentationDto presentationDto) {
+  public Presentation fromDto(PresentationDto presentationDto, String email) {
     if (presentationDto == null) {
       throw new ServerErrorException("Cannot map null dto to model.");
     }
@@ -19,6 +19,7 @@ public class PresentationMapperImpl implements PresentationMapper {
       .beginsAt(presentationDto.getBeginsAt())
       .duration(presentationDto.getDuration())
       .token(presentationDto.getToken())
+      .owner(email)
       .build();
   }
 

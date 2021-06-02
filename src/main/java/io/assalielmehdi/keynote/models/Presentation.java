@@ -20,7 +20,7 @@ public class Presentation {
   private String title;
 
   @NotNull
-  private User owner;
+  private String owner;
 
   @NotNull
   private LocalDateTime beginsAt;

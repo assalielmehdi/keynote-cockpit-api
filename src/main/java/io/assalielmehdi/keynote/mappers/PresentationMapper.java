@@ -5,7 +5,7 @@ import io.assalielmehdi.keynote.models.Presentation;
 
 public interface PresentationMapper {
 
-  Presentation fromDto(PresentationDto presentationDto);
+  Presentation fromDto(PresentationDto presentationDto, String email);
 
   PresentationDto toDto(Presentation presentation);
 

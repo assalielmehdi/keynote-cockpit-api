@@ -6,6 +6,7 @@ import io.assalielmehdi.keynote.helpers.PresentationHelper;
 import io.assalielmehdi.keynote.mappers.PresentationMapper;
 import io.assalielmehdi.keynote.models.Presentation;
 import io.assalielmehdi.keynote.repositories.PresentationRepository;
+import io.assalielmehdi.keynote.security.AuthenticationService;
 import io.assalielmehdi.keynote.validators.PresentationValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,6 +38,9 @@ class PresentationServiceImplTest {
   @Mock
   private TokenService tokenService;
 
+  @Mock
+  private AuthenticationService authenticationService;
+
   @InjectMocks
   private PresentationServiceImpl presentationService;
 
@@ -59,6 +63,7 @@ class PresentationServiceImplTest {
     verify(presentationValidator).validateRequest(dto);
     verifyNoInteractions(tokenService);
     verifyNoInteractions(presentationRepository);
+    verifyNoInteractions(authenticationService);
   }
 
   @Test
@@ -68,6 +73,7 @@ class PresentationServiceImplTest {
     final var beginsAt = LocalDateTime.now();
     final var duration = 60;
     final var token = "token";
+    final var owner = "owner-email";
     final var dto = PresentationDto.builder()
       .title(title)
       .beginsAt(beginsAt)
@@ -79,7 +85,8 @@ class PresentationServiceImplTest {
     doNothing().when(presentationHelper).normalizeRequest(dto);
     doNothing().when(presentationValidator).validateRequest(dto);
     when(tokenService.generate()).thenReturn(token);
-    when(presentationMapper.fromDto(dto)).thenReturn(model);
+    when(authenticationService.getPrincipalEmail()).thenReturn(owner);
+    when(presentationMapper.fromDto(dto, owner)).thenReturn(model);
     when(presentationRepository.save(model)).thenReturn(model);
 
     // When
@@ -89,7 +96,8 @@ class PresentationServiceImplTest {
     verify(presentationHelper).normalizeRequest(dto);
     verify(presentationValidator).validateRequest(dto);
     verify(tokenService).generate();
-    verify(presentationMapper).fromDto(dto);
+    verify(authenticationService).getPrincipalEmail();
+    verify(presentationMapper).fromDto(dto, owner);
     verify(presentationRepository).save(model);
     assertThat(savedDto).isEqualTo(dto);
   }
