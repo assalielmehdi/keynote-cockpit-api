@@ -3,6 +3,8 @@ package io.assalielmehdi.keynote.validators;
 import io.assalielmehdi.keynote.exceptions.BadInputException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class CommonValidatorImpl implements CommonValidator {
 
@@ -31,6 +33,13 @@ public class CommonValidatorImpl implements CommonValidator {
   public void requireLengthInRange(int minLength, int maxLength, String value, String name) {
     if (value == null || value.length() < minLength || value.length() > maxLength) {
       throw new BadInputException(String.format("Bad Input: %s should be have length in range [%d, %d].", name, minLength, maxLength));
+    }
+  }
+
+  @Override
+  public void requireDateAfterMaxDays(LocalDateTime date, int maxDays, String name) {
+    if (date == null || LocalDateTime.now().plusDays(maxDays).compareTo(date) < 0) {
+      throw new BadInputException(String.format("Bad Input: %s should come after %d days maximum", name, maxDays));
     }
   }
 

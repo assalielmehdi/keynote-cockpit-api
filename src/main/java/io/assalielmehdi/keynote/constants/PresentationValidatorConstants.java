@@ -10,6 +10,8 @@ public class PresentationValidatorConstants {
 
   public static final int MAX_TITLE_LENGTH = 128;
 
+  public static final int MAX_BEGINS_AT_DAYS_AFTER = 30;
+
   private PresentationValidatorConstants() {
   }
 

@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -173,6 +175,51 @@ class CommonValidatorImplTest {
         "value",
         name
       )
+    );
+
+    assertThat(exception.getMessage()).contains(name);
+  }
+
+  @Test
+  void given_null_date_should_throw_bad_input_exception_when_requireDateAfterMaxDays() {
+    // Given
+    final var name = "field";
+
+    final var exception = assertThrows(
+      // Then
+      BadInputException.class,
+      // When
+      () -> commonValidator.requireDateAfterMaxDays(null, 0, name)
+    );
+
+    assertThat(exception.getMessage()).contains(name);
+  }
+
+  @Test
+  void given_valid_date_should_do_nothing_when_requireDateAfterMaxDays() {
+    // Given
+    final var maxDays = 30;
+    final var date = LocalDateTime.now().plusDays(maxDays - 1);
+
+    // Then
+    assertDoesNotThrow(
+      // When
+      () -> commonValidator.requireDateAfterMaxDays(date, maxDays, "field")
+    );
+  }
+
+  @Test
+  void given_not_valid_date_should_do_nothing_when_requireDateAfterMaxDays() {
+    // Given
+    final var name = "field";
+    final var maxDays = 30;
+    final var date = LocalDateTime.now().plusDays(maxDays + 1);
+
+    final var exception = assertThrows(
+      //Then
+      BadInputException.class,
+      // When
+      () -> commonValidator.requireDateAfterMaxDays(date, maxDays, name)
     );
 
     assertThat(exception.getMessage()).contains(name);

@@ -23,7 +23,11 @@ public class PresentationValidatorImpl implements PresentationValidator {
   }
 
   private void validateBeginsAt(LocalDateTime beginsAt) {
-    commonValidator.requireNotNull(beginsAt, "beginsAt");
+    commonValidator.requireDateAfterMaxDays(
+      beginsAt,
+      PresentationValidatorConstants.MAX_BEGINS_AT_DAYS_AFTER,
+      "beginsAt"
+    );
   }
 
   private void validateDuration(int duration) {
@@ -35,7 +39,6 @@ public class PresentationValidatorImpl implements PresentationValidator {
     );
   }
 
-  // TODO: Check beginsAt (comes after 30 days maximum)
   @Override
   public void validateRequest(PresentationDto presentationDto) {
     validateTitle(presentationDto.getTitle());

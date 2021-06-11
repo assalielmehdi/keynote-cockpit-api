@@ -160,12 +160,13 @@ class PresentationValidatorImplTest {
   }
 
   @Test
-  void given_null_beginsAt_should_throw_bad_input_exception_when_validateRequest() {
+  void given_presentationDto_should_call_requireDateAfterMaxDays_when_validateRequest() {
     // Given
     final var title = "presentation";
+    final var beginsAt = LocalDateTime.now();
     final var presentationDto = PresentationDto.builder()
       .title(title)
-      .beginsAt(null)
+      .beginsAt(beginsAt)
       .duration(60)
       .build();
 
@@ -175,22 +176,27 @@ class PresentationValidatorImplTest {
       title,
       "title"
     );
-    doThrow(BadInputException.class).when(commonValidator).requireNotNull(null, "beginsAt");
-
-    assertThrows(
-      // Then
-      BadInputException.class,
-      // When
-      () -> presentationValidator.validateRequest(presentationDto)
+    doThrow(BadInputException.class).when(commonValidator).requireDateAfterMaxDays(
+      beginsAt,
+      PresentationValidatorConstants.MAX_BEGINS_AT_DAYS_AFTER,
+      "beginsAt"
     );
 
+    // When
+    assertThrows(BadInputException.class, () -> presentationValidator.validateRequest(presentationDto));
+
+    // Then
     verify(commonValidator).requireLengthInRange(
       PresentationValidatorConstants.MIN_TITLE_LENGTH,
       PresentationValidatorConstants.MAX_TITLE_LENGTH,
       title,
       "title"
     );
-    verify(commonValidator).requireNotNull(null, "beginsAt");
+    verify(commonValidator).requireDateAfterMaxDays(
+      beginsAt,
+      PresentationValidatorConstants.MAX_BEGINS_AT_DAYS_AFTER,
+      "beginsAt"
+    );
     verifyNoMoreInteractions(commonValidator);
   }
 
@@ -214,7 +220,11 @@ class PresentationValidatorImplTest {
       title,
       "title"
     );
-    doNothing().when(commonValidator).requireNotNull(beginsAt, "beginsAt");
+    doNothing().when(commonValidator).requireDateAfterMaxDays(
+      beginsAt,
+      PresentationValidatorConstants.MAX_BEGINS_AT_DAYS_AFTER,
+      "beginsAt"
+    );
     doThrow(BadInputException.class).when(commonValidator).requireInRangeClosed(
       eq(PresentationValidatorConstants.MIN_DURATION),
       eq(PresentationValidatorConstants.MAX_DURATION),
@@ -235,7 +245,11 @@ class PresentationValidatorImplTest {
       title,
       "title"
     );
-    verify(commonValidator).requireNotNull(beginsAt, "beginsAt");
+    verify(commonValidator).requireDateAfterMaxDays(
+      beginsAt,
+      PresentationValidatorConstants.MAX_BEGINS_AT_DAYS_AFTER,
+      "beginsAt"
+    );
     verify(commonValidator).requireInRangeClosed(
       PresentationValidatorConstants.MIN_DURATION,
       PresentationValidatorConstants.MAX_DURATION,
@@ -263,7 +277,11 @@ class PresentationValidatorImplTest {
       title,
       "title"
     );
-    doNothing().when(commonValidator).requireNotNull(beginsAt, "beginsAt");
+    doNothing().when(commonValidator).requireDateAfterMaxDays(
+      beginsAt,
+      PresentationValidatorConstants.MAX_BEGINS_AT_DAYS_AFTER,
+      "beginsAt"
+    );
     doNothing().when(commonValidator).requireInRangeClosed(
       PresentationValidatorConstants.MIN_DURATION,
       PresentationValidatorConstants.MAX_DURATION,
@@ -281,7 +299,11 @@ class PresentationValidatorImplTest {
       title,
       "title"
     );
-    verify(commonValidator).requireNotNull(beginsAt, "beginsAt");
+    verify(commonValidator).requireDateAfterMaxDays(
+      beginsAt,
+      PresentationValidatorConstants.MAX_BEGINS_AT_DAYS_AFTER,
+      "beginsAt"
+    );
     verify(commonValidator).requireInRangeClosed(
       PresentationValidatorConstants.MIN_DURATION,
       PresentationValidatorConstants.MAX_DURATION,
