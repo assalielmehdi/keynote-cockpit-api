@@ -225,4 +225,43 @@ class CommonValidatorImplTest {
     assertThat(exception.getMessage()).contains(name);
   }
 
+  @Test
+  void given_valid_email_should_do_nothing_when_requireEmail() {
+    // Given
+
+    // Then
+    assertDoesNotThrow(
+      // When
+      () -> commonValidator.requireEmail("valid-email.123@gmail.com")
+    );
+  }
+
+  @Test
+  void given_null_email_should_throw_bad_input_exception_when_requireEmail() {
+    // Given
+
+    assertThrows(
+      // Then
+      BadInputException.class,
+      // When
+      () -> commonValidator.requireEmail(null)
+    );
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"", ".com", "not-valid", "@gmail.com", ".@gmail.com", "not-valid@gmail.com."})
+  void given_not_valid_email_should_throw_bad_input_exception_when_requireEmail(final String email) {
+    // Given
+
+    final var exception = assertThrows(
+      // Then
+      BadInputException.class,
+      // When
+      () -> commonValidator.requireEmail(email)
+    );
+
+    // Then
+    assertThat(exception.getMessage()).contains(email);
+  }
+
 }

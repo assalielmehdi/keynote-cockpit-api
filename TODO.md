@@ -1,5 +1,5 @@
-- [ ] Write unit tests for added components
-- [ ] Write validation rules for user creation
+- [x] Write unit tests for added components
+- [x] Write validation rules for user creation and complete validation for presentation creation
 - [ ] Create unique indexes in mongodb and make sur no duplicate is allowed
 - [ ] Complete user CRUD
 - [ ] Complete presentation CRUD

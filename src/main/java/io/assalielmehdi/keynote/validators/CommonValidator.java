@@ -14,4 +14,6 @@ public interface CommonValidator {
 
   void requireDateAfterMaxDays(LocalDateTime date, int maxDays, String name);
 
+  void requireEmail(String email);
+
 }
